@@ -1,3 +1,22 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: springAiDemo
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY}
+      chat:
+        options:
+          model: qwen-turbo
+          max-tokens: 1000
+      embedding:
+        options:
+          model: text-embedding-v3
+    vectorstore:
+      milvus:
+        client:
+          host: ${MILVUS_HOST}
+          port: ${MILVUS_PORT}
+        database-name: springAiDemo
