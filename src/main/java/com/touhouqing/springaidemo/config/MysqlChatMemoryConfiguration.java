@@ -2,17 +2,17 @@ package com.touhouqing.springaidemo.config;
 
 import com.alibaba.cloud.ai.autoconfigure.memory.MysqlChatMemoryProperties;
 import com.alibaba.cloud.ai.memory.jdbc.MysqlChatMemoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-public class MysqlMemoryConfiguration {
+@RequiredArgsConstructor
+public class MysqlChatMemoryConfiguration {
 
-    @Autowired
-    private MysqlChatMemoryProperties mysqlChatMemoryProperties;
+    private final MysqlChatMemoryProperties mysqlChatMemoryProperties;
 
     @Bean
     public MysqlChatMemoryRepository mysqlChatMemoryRepository(){

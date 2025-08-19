@@ -1,6 +1,7 @@
 package com.touhouqing.springaidemo.config;
 
 import com.alibaba.cloud.ai.memory.jdbc.MysqlChatMemoryRepository;
+import com.alibaba.cloud.ai.memory.redis.RedissonRedisChatMemoryRepository;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
@@ -30,6 +31,14 @@ public class ChatMemoryConfiguration {
     public ChatMemory mysqlChatMemory(MysqlChatMemoryRepository mysqlChatMemoryRepository) {
         return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(mysqlChatMemoryRepository)
+                .maxMessages(10)
+                .build();
+    }
+
+    @Bean
+    public ChatMemory redisChatMemory(RedissonRedisChatMemoryRepository redissonRedisChatMemoryRepository) {
+        return MessageWindowChatMemory.builder()
+                .chatMemoryRepository(redissonRedisChatMemoryRepository)
                 .maxMessages(10)
                 .build();
     }

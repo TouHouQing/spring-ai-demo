@@ -16,19 +16,18 @@ import java.util.List;
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 
 @RestController
+@RequestMapping("/redis")
 @RequiredArgsConstructor
-@RequestMapping("/mysql")
-public class ChatMysqlMemoryController {
-
-    private final ChatClient mysqlChatClient;
+public class RedisMemoryController {
+    private final ChatClient redisChatClient;
 
     @Autowired
-    @Qualifier("mysqlChatMemory")
+    @Qualifier("redisChatMemory")
     private MessageWindowChatMemory messageWindowChatMemory;
 
     @GetMapping(path = "/chat", produces = "text/html;charset=utf-8")
-    public Flux<String> chat(String message, String id) {
-        return mysqlChatClient.prompt()
+    public Flux<String> chat(String message,String id) {
+        return redisChatClient.prompt()
                 .user(message)
                 .advisors(a -> a.param(CONVERSATION_ID, id))
                 .stream()

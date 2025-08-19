@@ -36,4 +36,15 @@ public class ChatClientConfiguration {
                 .build();
     }
 
+    @Bean
+    public ChatClient redisChatClient(DashScopeChatModel dashScopeChatModel, ChatMemory redisChatMemory) {
+        return ChatClient.builder(dashScopeChatModel)
+                .defaultSystem("你只需要记住用户的名字，每次只需要回答用户的名字，并在结尾加上redis，如果你不知道用户名字是什么就说不知道")
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(),
+                        MessageChatMemoryAdvisor.builder(redisChatMemory).build()
+                )
+                .build();
+    }
+
 }
