@@ -1,6 +1,5 @@
 server:
   port: 8080
-
 spring:
   application:
     name: springAiDemo
@@ -11,12 +10,22 @@ spring:
         options:
           model: qwen-turbo
           max-tokens: 1000
+        enabled: false
       embedding:
         options:
           model: text-embedding-v3
     vectorstore:
       milvus:
         client:
-          host: ${MILVUS_HOST}
+          host: ${HOST}
           port: ${MILVUS_PORT}
         database-name: springAiDemo
+    memory:
+      redis:
+        host: ${HOST}
+        port: ${REDIS_PORT}
+        password: ${REDIS_PASSWORD}
+logging:
+  level:
+    org.springframework.ai.chat.client: debug
+    com.touhouqing.springaidemo: debug
