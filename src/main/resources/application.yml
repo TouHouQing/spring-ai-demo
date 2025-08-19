@@ -9,7 +9,7 @@ spring:
       chat:
         options:
           model: qwen-turbo
-          max-tokens: 1000
+          max-tokens: 300
         enabled: false
       embedding:
         options:
