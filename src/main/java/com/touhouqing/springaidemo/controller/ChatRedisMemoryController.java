@@ -18,7 +18,7 @@ import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 @RestController
 @RequestMapping("/redis")
 @RequiredArgsConstructor
-public class RedisMemoryController {
+public class ChatRedisMemoryController {
     private final ChatClient redisChatClient;
 
     @Autowired

@@ -25,6 +25,10 @@ spring:
           host: ${HOST}
           port: ${MILVUS_PORT}
         database-name: springAiDemo
+        collectionName: springAiDemo
+        indexType: IVF_FLAT
+        embeddingDimension: 1024
+        initialize-schema: true
     memory:
       redis:
         host: ${HOST}

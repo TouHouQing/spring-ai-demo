@@ -23,7 +23,7 @@ public class ChatMemoryConfiguration {
     public ChatMemory chatMemory(ChatMemoryRepository chatMemoryRepository) {
         return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(chatMemoryRepository)
-                .maxMessages(10)
+                .maxMessages(5)
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class ChatMemoryConfiguration {
     public ChatMemory mysqlChatMemory(MysqlChatMemoryRepository mysqlChatMemoryRepository) {
         return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(mysqlChatMemoryRepository)
-                .maxMessages(10)
+                .maxMessages(5)
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class ChatMemoryConfiguration {
     public ChatMemory redisChatMemory(RedissonRedisChatMemoryRepository redissonRedisChatMemoryRepository) {
         return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(redissonRedisChatMemoryRepository)
-                .maxMessages(10)
+                .maxMessages(5)
                 .build();
     }
 }
