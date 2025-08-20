@@ -8,4 +8,5 @@ public interface MilvusVectorService {
      * @param file
      */
     void add(MultipartFile file);
+
 }

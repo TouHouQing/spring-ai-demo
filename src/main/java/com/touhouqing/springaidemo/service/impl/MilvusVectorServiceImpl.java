@@ -6,12 +6,15 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
+import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +25,23 @@ public class MilvusVectorServiceImpl implements MilvusVectorService {
 
     @Override
     public void add(MultipartFile file) {
-        writeToVectorStore(file.getResource());
+        //如果文件类型是pdf
+        if(Objects.requireNonNull(file.getOriginalFilename()).endsWith(".pdf")){
+            pdfToVectorStore(file.getResource());
+        }
+        else{
+            TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(file.getResource());
+            List<Document> documents = tikaDocumentReader.read();
+            // 为每个Document设置file_name和Uid元数据
+            documents.forEach(document -> {
+                document.getMetadata().put("file_name", file.getOriginalFilename());
+                document.getMetadata().put("id", UUID.randomUUID().toString());
+            });
+            vectorStore.add(documents);
+        }
     }
 
-    private void writeToVectorStore(Resource resource) {
+    private void pdfToVectorStore(Resource resource) {
         // 1.创建PDF的读取器
         PagePdfDocumentReader reader = new PagePdfDocumentReader(
                 resource, // 文件源
