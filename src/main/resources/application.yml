@@ -15,7 +15,6 @@ spring:
         options:
           model: qwen-turbo
           max-tokens: 300
-        enabled: false
       embedding:
         options:
           model: text-embedding-v3
