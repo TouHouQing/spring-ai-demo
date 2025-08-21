@@ -2,7 +2,7 @@ package com.touhouqing.springaidemo.service.impl;
 
 import com.touhouqing.springaidemo.model.AiChatMemory;
 import com.touhouqing.springaidemo.mapper.AiChatMemoryMapper;
-import com.touhouqing.springaidemo.service.IAiChatMemoryService;
+import com.touhouqing.springaidemo.service.AiChatMemoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2025-08-20
  */
 @Service
-public class AiChatMemoryServiceImpl extends ServiceImpl<AiChatMemoryMapper, AiChatMemory> implements IAiChatMemoryService {
+public class AiChatMemoryServiceImpl extends ServiceImpl<AiChatMemoryMapper, AiChatMemory> implements AiChatMemoryService {
 
 }

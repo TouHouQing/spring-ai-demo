@@ -1,6 +1,6 @@
 package com.touhouqing.springaidemo.service;
 
-import com.touhouqing.springaidemo.model.FileVector;
+import com.touhouqing.springaidemo.model.AiChatMemory;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author TouHouQing
  * @since 2025-08-20
  */
-public interface IFileVectorService extends IService<FileVector> {
+public interface AiChatMemoryService extends IService<AiChatMemory> {
 
 }

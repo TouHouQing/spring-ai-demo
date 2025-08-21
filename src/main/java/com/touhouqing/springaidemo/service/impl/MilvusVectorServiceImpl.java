@@ -12,6 +12,7 @@ import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,12 @@ public class MilvusVectorServiceImpl implements MilvusVectorService {
 
     private final FileVectorMapper fileVectorMapper;
 
+    /**
+     * 上传文件
+     * @param file
+     */
     @Override
+    @Transactional
     public void add(MultipartFile file) {
         //如果文件类型是pdf
         if (Objects.requireNonNull(file.getOriginalFilename()).endsWith(".pdf")) {
@@ -40,13 +46,32 @@ public class MilvusVectorServiceImpl implements MilvusVectorService {
         }
     }
 
+    /**
+     * 批量删除文件
+     * @param ids
+     */
+    @Override
+    @Transactional
+    public void deleteBatch(List<Integer> ids) {
+        fileVectorMapper.deleteByIds(ids);
+        for (Integer id : ids) {
+            String filterExpr = "id == " + id.toString();
+            vectorStore.delete(filterExpr);
+        }
+    }
+
+    /**
+     * 保存文件向量
+     * @param fileVector
+     * @param documents
+     */
     private void saveFileVector(FileVector fileVector, List<Document> documents) {
         documents.forEach(document -> {
-            document.getMetadata().put("VectorId", fileVector.getVectorId());
-            document.getMetadata().put("OriginalFileName", fileVector.getOriginalFileName());
-            document.getMetadata().put("CurrentFileName", fileVector.getCurrentFileName());
-            document.getMetadata().put("FileSize", fileVector.getFileSize());
-            document.getMetadata().put("FileType", fileVector.getFileType());
+            document.getMetadata().put("id", fileVector.getId());
+            document.getMetadata().put("original_file_name", fileVector.getOriginalFileName());
+            document.getMetadata().put("current_file_name", fileVector.getCurrentFileName());
+            document.getMetadata().put("file_size", fileVector.getFileSize());
+            document.getMetadata().put("file_type", fileVector.getFileType());
         });
         vectorStore.add(documents);
     }
@@ -58,12 +83,15 @@ public class MilvusVectorServiceImpl implements MilvusVectorService {
         fileVector.setFileSize(file.getSize());
         fileVector.setOriginalFileName(file.getOriginalFilename()+"."+file.getContentType());
         fileVector.setCurrentFileName(UUID.randomUUID()+file.getContentType());
-        fileVector.setVectorId(UUID.randomUUID().toString());
         fileVector.setCreateTime(LocalDateTime.now());
         fileVectorMapper.insert(fileVector);
         return fileVector;
     }
 
+    /**
+     * pdf文件处理
+     * @param file
+     */
     private void pdfToVectorStore(MultipartFile file) {
         Resource resource = file.getResource();
         // 1.创建PDF的读取器

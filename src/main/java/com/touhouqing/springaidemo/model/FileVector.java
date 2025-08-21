@@ -63,26 +63,12 @@ public class FileVector implements Serializable {
     private Long fileSize;
 
     /**
-     * 向量存储id
-     */
-    @TableField("vector_id")
-    private String vectorId;
-
-    /**
      * 创建时间
      */
     @TableField("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-
-    /**
-     * 删除时间
-     */
-    @TableField("delete_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime deleteTime;
 
     public FileVector(){
         this.createTime = LocalDateTime.now();
