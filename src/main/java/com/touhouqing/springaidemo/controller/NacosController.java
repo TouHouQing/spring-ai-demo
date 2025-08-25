@@ -36,4 +36,17 @@ public class NacosController {
         return Result.success(nacosService.getPrompt());
     }
 
+    //修改nacos的yaml配置
+    @PostMapping("/yaml")
+    public Result yaml(String apiKey,String baseUrl,String chatModel,String embeddingModel,Integer maxToken) {
+        nacosService.postYaml(apiKey,baseUrl,chatModel,embeddingModel,maxToken);
+        return Result.success();
+    }
+
+    //获取nacos的yaml配置
+    @GetMapping("/yaml")
+    public Result<String> getYaml() throws IOException, InterruptedException {
+        return Result.success(nacosService.getYaml());
+    }
+
 }

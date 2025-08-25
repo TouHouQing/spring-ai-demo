@@ -20,8 +20,8 @@ public class ChatClientConfiguration {
     private final VectorStore vectorStore;
 
     @Bean
-    public ChatClient chatClient(DashScopeChatModel dashScopeChatModel, ChatMemory chatMemory) {
-        return ChatClient.builder(dashScopeChatModel)
+    public ChatClient chatClient(DashScopeChatModel chatModel, ChatMemory chatMemory) {
+        return ChatClient.builder(chatModel)
                 .defaultSystem("你只需要记住用户的名字，每次只需要回答用户的名字，并在结尾加上内存，如果你不知道用户名字是什么就说不知道")
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),
@@ -31,8 +31,8 @@ public class ChatClientConfiguration {
     }
 
     @Bean
-    public ChatClient mysqlChatClient(DashScopeChatModel dashScopeChatModel, ChatMemory mysqlChatMemory) {
-        return ChatClient.builder(dashScopeChatModel)
+    public ChatClient mysqlChatClient(DashScopeChatModel chatModel, ChatMemory mysqlChatMemory) {
+        return ChatClient.builder(chatModel)
                 .defaultSystem("你只需要记住用户的名字，每次只需要回答用户的名字，并在结尾加上mysql，如果你不知道用户名字是什么就说不知道")
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),
@@ -42,8 +42,8 @@ public class ChatClientConfiguration {
     }
 
     @Bean
-    public ChatClient redisChatClient(DashScopeChatModel dashScopeChatModel, ChatMemory redisChatMemory) {
-        return ChatClient.builder(dashScopeChatModel)
+    public ChatClient redisChatClient(DashScopeChatModel chatModel, ChatMemory redisChatMemory) {
+        return ChatClient.builder(chatModel)
                 .defaultSystem("你只需要记住用户的名字，每次只需要回答用户的名字，并在结尾加上redis，如果你不知道用户名字是什么就说不知道")
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),
@@ -53,8 +53,8 @@ public class ChatClientConfiguration {
     }
 
     @Bean
-    public ChatClient milvusChatClient(DashScopeChatModel dashScopeChatModel, ChatMemory chatMemory) {
-        return ChatClient.builder(dashScopeChatModel)
+    public ChatClient milvusChatClient(DashScopeChatModel chatModel, ChatMemory chatMemory) {
+        return ChatClient.builder(chatModel)
                 .defaultSystem("你是一个友好且知识渊博的AI助手。基于提供的上下文信息来回答问题，如果上下文中没有相关信息，请明确告知用户。")
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),

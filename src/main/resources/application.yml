@@ -4,6 +4,7 @@ spring:
   config:
     import:
       - nacos:nacos-config-example.properties?refreshEnabled=true
+      - nacos:springAiDemo.yml?refreshEnabled=true
   application:
     name: springAiDemo
   datasource:
@@ -16,11 +17,12 @@ spring:
       api-key: ${DASHSCOPE_API_KEY}
       chat:
         options:
-          model: qwen-turbo
-          max-tokens: 300
+          model: ${CHAT_MODEL:qwen-plus}
+          max-tokens: ${MAX_TOKEN:300}
       embedding:
         options:
-          model: text-embedding-v3
+          model: ${EMBEDDING_MODEL:text-embedding-v3}
+      base-url: ${DASHSCOPE_BASE_URL:https://dashscope.aliyuncs.com}
     vectorstore:
       milvus:
         client:
