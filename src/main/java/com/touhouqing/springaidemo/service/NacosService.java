@@ -9,4 +9,9 @@ public interface NacosService {
      */
     void postPrompt(String prompt) throws IOException, InterruptedException;
 
+    /**
+     * 获取nacos的prompt配置
+     * @return
+     */
+    String getPrompt() throws IOException, InterruptedException;
 }

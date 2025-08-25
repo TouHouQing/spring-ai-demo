@@ -19,14 +19,12 @@ public class NacosServiceImpl implements NacosService {
 
     private final NacosConfiguration nacosConfiguration;
 
-    private final String dataId = nacosConfiguration.getDataId();
-
-    private final String group = nacosConfiguration.getGroup();
-
-    private final String baseUrl = nacosConfiguration.getBaseUrl();
-
     @Override
     public void postPrompt(String prompt) throws IOException, InterruptedException {
+        String dataId = nacosConfiguration.getDataId();
+        String group = nacosConfiguration.getGroup();
+        String baseUrl = nacosConfiguration.getBaseUrl();
+
         // 1. 编码参数，防止特殊字符导致的URL错误
         String encodedDataId = URLEncoder.encode(dataId, StandardCharsets.UTF_8);
         String encodedGroup = URLEncoder.encode(group, StandardCharsets.UTF_8);
@@ -59,5 +57,43 @@ public class NacosServiceImpl implements NacosService {
             throw new RuntimeException("修改Nacos配置失败: " + response.body() +
                     ", 状态码: " + response.statusCode());
         }
+    }
+
+    @Override
+    public String getPrompt() throws IOException, InterruptedException {
+        String dataId = nacosConfiguration.getDataId();
+        String group = nacosConfiguration.getGroup();
+        String baseUrl = nacosConfiguration.getBaseUrl();
+        // 1. 编码参数
+        String encodedDataId = URLEncoder.encode(dataId, StandardCharsets.UTF_8);
+        String encodedGroup = URLEncoder.encode(group, StandardCharsets.UTF_8);
+
+        // 2. 构建完整URL，包含查询参数
+        String url = String.format(
+                "%s/v1/cs/configs?dataId=%s&group=%s",
+                baseUrl,
+                encodedDataId,
+                encodedGroup
+        );
+
+        // 3. 创建HTTP客户端和请求（使用GET方法）
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json, text/plain, */*")
+                .GET() // 获取配置使用GET方法
+                .build();
+
+        // 4. 发送请求并获取响应
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // 5. 验证响应结果
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("获取Nacos配置失败: " + response.body() +
+                    ", 状态码: " + response.statusCode());
+        }
+
+        // 6. 返回配置内容（如果只需要system.prompt的值，可以在这里进行解析）
+        return response.body();
     }
 }
