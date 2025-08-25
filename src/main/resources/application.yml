@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+  config:
+    import:
+      - nacos:nacos-config-example.properties?refreshEnabled=true
   application:
     name: springAiDemo
   datasource:
@@ -39,6 +42,14 @@ spring:
         username: ${DB_USERNAME:root}
         password: ${DB_PASSWORD}
         enabled: true
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+    compatibility-verifier:
+      enabled: false
+
 logging:
   level:
     org.springframework.ai.chat.client: debug
