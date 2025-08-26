@@ -5,8 +5,13 @@ import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +30,14 @@ import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 @RequiredArgsConstructor
 @RefreshScope
 public class ChatRedisMemoryController {
-    private final ChatClient redisChatClient;
 
     @Autowired
     @Qualifier("redisChatMemory")
     private MessageWindowChatMemory messageWindowChatMemory;
+
+    private final VectorStore vectorStore;
+
+    private final ChatMemory redisChatMemory;
 
     @Value(value = "${spring.ai.dashscope.api-key}")
     private String apiKey;
@@ -51,7 +59,17 @@ public class ChatRedisMemoryController {
         DashScopeApi dashScopeApi = DashScopeApi.builder().apiKey(apiKey).baseUrl(baseUrl).build();
         DashScopeChatOptions dashScopeChatOptions = DashScopeChatOptions.builder().withModel(model).withMaxToken(maxToken).build();
         DashScopeChatModel chatModel = DashScopeChatModel.builder().dashScopeApi(dashScopeApi).defaultOptions(dashScopeChatOptions).build();
-        ChatClient chatClient = ChatClient.builder(chatModel).build();
+        ChatClient chatClient = ChatClient.builder(chatModel)
+                .defaultAdvisors(
+//                        new SimpleLoggerAdvisor(),   //对话日志，测试用
+                        MessageChatMemoryAdvisor.builder(redisChatMemory).build(),
+                        QuestionAnswerAdvisor.builder(vectorStore)
+                                .searchRequest(SearchRequest.builder()
+                                        .topK(10)
+                                        .similarityThreshold(0.3)
+                                        .build())
+                                .build()
+                ).build();
         return chatClient.prompt()
                 .system(prompt)
                 .user(message)
